@@ -25,12 +25,14 @@ namespace CardGame
 
         public void NewIteration()
         {
+            StopAllCoroutines();
             _gameSuit = GetNewGameSuit();
             ResortCardInHand();
         }
         
         public void StartNewGame()
         {
+            StopAllCoroutines();
             FillAllCards();
             StartCoroutine(WaitAllCards(new cardFunc[]{NewIteration}));
             HideAllCards();
@@ -42,13 +44,13 @@ namespace CardGame
         
         public void LoadGame()
         {
+            StopAllCoroutines();
             FillAllCards(true);
             _gameSuit = (Card.CardSuits) PlayerPrefs.GetInt("GameSuit");
-            ResortCardInHand();
+            StartCoroutine(WaitAllCards(new cardFunc[]{ResortCardInHand}));
             HideAllCards();
             MoveCardsToHand();
             ShowGameCards();
-            ShowAllCards();
         }
 
         public void MoveCardToCenter(int cardId)
@@ -65,7 +67,7 @@ namespace CardGame
             {
                 for (int cardId = 0; cardId < _cards.Length; cardId++)
                 {
-                    if (_cards[cardId].currentSuit == result) return result;
+                    if (_cards[cardId].gameObject.activeSelf && _cards[cardId].currentSuit == result) return result;
                 }
                 
                 result = (Card.CardSuits) Random.Range(0, 4);
@@ -142,7 +144,7 @@ namespace CardGame
             for (int cardId = 0; cardId < _cards.Length; cardId++) StartCoroutine(MoveCard(
                 cardId,
                 new Vector2(_hand.position.x + (_offset *  cardId) - ((_cards.Length * _offset) / 2), _hand.position.y)));
-            StartCoroutine(WaitAllCards(new cardFunc[]{ShowAllCards}));
+            ShowAllCards();
         }
 
         private void ShowGameCards()
