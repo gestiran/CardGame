@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using CardGame.SaveLoad;
+﻿using CardGame.SaveLoad;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,8 +12,8 @@ namespace CardGame
 
         public void LoadScore()
         {
-            if (!CardsSaveLoad.HasScore) return;
-            _currentScore = CardsSaveLoad.LoadScore();
+            if (!GameSaveLoad.HasScore) return;
+            _currentScore = GameSaveLoad.LoadScore();
             ShowScore();
         }
         
@@ -23,7 +21,7 @@ namespace CardGame
         {
             _currentScore++;
             ShowScore();
-            CardsSaveLoad.SaveScore(_currentScore);
+            GameSaveLoad.SaveScore(_currentScore);
         }
 
         private void ShowScore() => _scoreText.text = _currentScore.ToString();

@@ -3,10 +3,13 @@ using UnityEngine;
 
 namespace CardGame.SaveLoad
 {
-    public static class CardsSaveLoad
+    public static class GameSaveLoad
     {
         private const string _cardBasePref = "CardBase";
         private const string _cardBaseHash = "CardBase_Hash";
+        
+        private const string _gameSuitPref = "GameSuit";
+        private const string _gameSuitHash = "GameSuit_Hash";
         
         private const string _scoreBasePref = "GameScore";
         private const string _scoreBaseHash = "GameScore_Hash";
@@ -60,6 +63,20 @@ namespace CardGame.SaveLoad
 
         #endregion
 
+        #region GameSuit
+
+        public static bool HasSuit => PlayerPrefs.HasKey(_gameSuitPref) && PlayerPrefs.GetInt(_gameSuitPref).GetHashCode() == PlayerPrefs.GetInt(_gameSuitHash);
+
+        public static Card.CardSuits LoadSuit() => (Card.CardSuits)PlayerPrefs.GetInt(_gameSuitPref, 0);
+
+        public static void SaveSuit(Card.CardSuits score)
+        {
+            PlayerPrefs.SetInt(_gameSuitPref, (int)score);
+            PlayerPrefs.SetInt(_gameSuitHash, PlayerPrefs.GetInt(_gameSuitPref).GetHashCode());
+        }
+
+        #endregion
+        
         #region Score
 
         public static bool HasScore => PlayerPrefs.HasKey(_scoreBasePref) && PlayerPrefs.GetInt(_scoreBasePref).GetHashCode() == PlayerPrefs.GetInt(_scoreBaseHash);

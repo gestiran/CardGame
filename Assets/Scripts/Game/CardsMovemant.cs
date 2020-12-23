@@ -27,6 +27,7 @@ namespace CardGame
         {
             StopAllCoroutines();
             _gameSuit = GetNewGameSuit();
+            GameSaveLoad.SaveSuit(_gameSuit);
             ResortCardInHand();
         }
         
@@ -46,7 +47,7 @@ namespace CardGame
         {
             StopAllCoroutines();
             FillAllCards(true);
-            _gameSuit = (Card.CardSuits) PlayerPrefs.GetInt("GameSuit");
+            _gameSuit = GameSaveLoad.LoadSuit();
             StartCoroutine(WaitAllCards(new cardFunc[]{ResortCardInHand}));
             HideAllCards();
             MoveCardsToHand();
@@ -88,10 +89,10 @@ namespace CardGame
                 _cards[cardId].Init();
             }
 
-            if (!isLoad && !CardsSaveLoad.HasSaved && !CardsSaveLoad.HasObjectsActives) return;
+            if (!isLoad && !GameSaveLoad.HasSaved && !GameSaveLoad.HasObjectsActives) return;
 
-            bool[] actives = CardsSaveLoad.LoadObjectsActive();
-            (int, Card.CardSuits, Card.CardTypes)[] loadedParams = CardsSaveLoad.Load();
+            bool[] actives = GameSaveLoad.LoadObjectsActive();
+            (int, Card.CardSuits, Card.CardTypes)[] loadedParams = GameSaveLoad.Load();
             
             for (int cardId = 0; cardId < _cardCount; cardId++)
             {
@@ -158,7 +159,7 @@ namespace CardGame
         
         private void ResortCardInHand()
         {
-            float previousCard = _cards[0].transform.position.x;
+            float previousCard = _cards[0].transform.position.x - _offset;
             bool isGame = false;
             
             for (int cardId = 0; cardId < _cards.Length; cardId++)
@@ -196,9 +197,8 @@ namespace CardGame
             yield return new WaitForSecondsRealtime(2f);
             
             _cards[id].gameObject.SetActive(false);
-            CardsSaveLoad.Save(_cards);
-            CardsSaveLoad.SaveObjectsActive(_cards);
-            PlayerPrefs.SetInt("GameSuit", (int)_gameSuit);
+            GameSaveLoad.Save(_cards);
+            GameSaveLoad.SaveObjectsActive(_cards);
             for (int cardId = 0; cardId < _cards.Length; cardId++) _cards[cardId].isClickable = true;
             NewIteration();
         }

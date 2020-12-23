@@ -9,7 +9,7 @@ namespace CardGame
         
         private void Start()
         {
-            if (!CardsSaveLoad.HasSaved && !CardsSaveLoad.HasScore && !CardsSaveLoad.HasObjectsActives) _loadButton.SetActive(false);
+            if (!GameSaveLoad.HasSaved && !GameSaveLoad.HasScore && !GameSaveLoad.HasObjectsActives && !GameSaveLoad.HasSuit) _loadButton.SetActive(false);
         }
 
         public void Load()
